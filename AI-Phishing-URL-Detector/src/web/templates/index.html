@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishGuard AI - Real-Time Phishing URL Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+
+    <header class="site-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <div>
+                    <h1>PhishGuard <span class="accent-text">AI</span></h1>
+                    <p class="tagline">Intelligent Phishing & Malicious URL Detection Engine</p>
+                </div>
+            </div>
+            <div class="system-status">
+                <span class="status-dot"></span>
+                <span class="status-text">Engine Online</span>
+                <span class="status-badge">Random Forest • 22 Features</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="single-scan">Real-Time Scanner</button>
+            <button class="tab-btn" data-tab="batch-scan">Batch URL Scanner</button>
+            <button class="tab-btn" data-tab="telemetry">Model Metrics & XAI</button>
+            <button class="tab-btn" data-tab="api-docs">API Documentation</button>
+        </nav>
+
+        <!-- TAB 1: Real-Time Single URL Scanner -->
+        <section id="single-scan" class="tab-content active">
+            <div class="card glass-card">
+                <div class="card-header">
+                    <h2>URL Deep Security Inspection</h2>
+                    <p>Enter any website URL to extract lexical, structural, and heuristic indicators evaluated by machine learning.</p>
+                </div>
+
+                <form id="url-form" class="scan-form">
+                    <div class="input-wrapper">
+                        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        <input type="text" id="url-input" placeholder="e.g. https://secure-login-paypal.com.account-verify.xyz/login" required autocomplete="off" />
+                        <button type="submit" id="scan-btn" class="btn-primary">
+                            <span class="btn-text">Analyze URL</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="quick-samples">
+                    <span class="samples-label">Quick Test Presets:</span>
+                    <button class="sample-btn benign" data-url="https://github.com/torvalds/linux">Benign: GitHub</button>
+                    <button class="sample-btn benign" data-url="https://chase.com/personal/banking">Benign: Chase Bank</button>
+                    <button class="sample-btn phish" data-url="http://paypa1-account-security-update.attacker.xyz/login.php">Phish: PayPal Spoof</button>
+                    <button class="sample-btn phish" data-url="http://192.168.1.102/bankofamerica/signin/index.html">Phish: IP Address</button>
+                    <button class="sample-btn phish" data-url="http://amaz0n-orders-verify.top/claim-gift?id=9941">Phish: Typosquatting</button>
+                </div>
+            </div>
+
+            <!-- Analysis Results Panel -->
+            <div id="results-panel" class="results-panel hidden">
+                <div class="grid-2col">
+                    <!-- Gauge & Verdict Card -->
+                    <div class="card glass-card verdict-card">
+                        <h3>Detection Verdict</h3>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" viewBox="0 0 160 160">
+                                <circle class="gauge-bg" cx="80" cy="80" r="65"></circle>
+                                <circle id="gauge-bar" class="gauge-bar" cx="80" cy="80" r="65"></circle>
+                            </svg>
+                            <div class="gauge-text">
+                                <span id="risk-score-value">0%</span>
+                                <span class="gauge-sub">RISK SCORE</span>
+                            </div>
+                        </div>
+
+                        <div class="verdict-banner" id="verdict-banner">
+                            <span id="verdict-label" class="verdict-title">SAFE</span>
+                            <span id="verdict-confidence" class="verdict-conf">Confidence: 99.8%</span>
+                        </div>
+
+                        <div class="scanned-url-display">
+                            <span class="url-label">Analyzed URL:</span>
+                            <code id="display-scanned-url"></code>
+                        </div>
+                    </div>
+
+                    <!-- Threat Indicators Card -->
+                    <div class="card glass-card">
+                        <h3>Explainable AI (XAI) Threat Signals</h3>
+                        <p class="card-subtitle">Breakdown of behavioral indicators and security red flags triggered:</p>
+                        <ul id="threat-indicators-list" class="threat-list"></ul>
+                    </div>
+                </div>
+
+                <!-- 22 Extracted Features Details -->
+                <div class="card glass-card full-width-card">
+                    <div class="feature-table-header">
+                        <h3>Extracted Feature Telemetry (22 Attributes)</h3>
+                        <span class="feature-count-badge">22 Signals Extracted</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="feature-table">
+                            <thead>
+                                <tr>
+                                    <th>Feature Name</th>
+                                    <th>Observed Value</th>
+                                    <th>Description & Security Implication</th>
+                                </tr>
+                            </thead>
+                            <tbody id="features-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: Batch URL Scanner -->
+        <section id="batch-scan" class="tab-content">
+            <div class="card glass-card">
+                <div class="card-header">
+                    <h2>Enterprise Batch URL Scanner</h2>
+                    <p>Analyze thousands of URLs in bulk for SIEM, firewall logs, or corporate email gateway audit.</p>
+                </div>
+
+                <div class="batch-input-area">
+                    <textarea id="batch-urls-input" rows="6" placeholder="Enter one URL per line...
+https://google.com
+http://paypal-verify-account.attacker.xyz/login
+https://github.com
+http://192.168.1.1/admin/login
+https://amazon.com"></textarea>
+                    <div class="batch-actions">
+                        <button id="batch-scan-btn" class="btn-primary">
+                            <span class="btn-text">Scan All URLs</span>
+                            <span class="spinner hidden"></span>
+                        </button>
+                        <button id="batch-clear-btn" class="btn-secondary">Clear</button>
+                        <button id="export-csv-btn" class="btn-secondary hidden">Export Results (CSV)</button>
+                    </div>
+                </div>
+
+                <!-- Batch Summary Stats -->
+                <div id="batch-stats" class="batch-stats-grid hidden">
+                    <div class="stat-card">
+                        <span class="stat-number" id="stat-total">0</span>
+                        <span class="stat-label">Total URLs Scanned</span>
+                    </div>
+                    <div class="stat-card danger">
+                        <span class="stat-number" id="stat-phish">0</span>
+                        <span class="stat-label">Phishing Threats Flagged</span>
+                    </div>
+                    <div class="stat-card safe">
+                        <span class="stat-number" id="stat-safe">0</span>
+                        <span class="stat-label">Legitimate Verified</span>
+                    </div>
+                    <div class="stat-card warning">
+                        <span class="stat-number" id="stat-ratio">0%</span>
+                        <span class="stat-label">Threat Percentage</span>
+                    </div>
+                </div>
+
+                <div id="batch-results-container" class="table-responsive hidden">
+                    <table class="batch-results-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Target URL</th>
+                                <th>Verdict</th>
+                                <th>Risk Score</th>
+                                <th>Confidence</th>
+                                <th>Top Red Flag</th>
+                            </tr>
+                        </thead>
+                        <tbody id="batch-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 3: Model Telemetry & XAI -->
+        <section id="telemetry" class="tab-content">
+            <div class="card glass-card">
+                <div class="card-header">
+                    <h2>Machine Learning Architecture & Benchmarks</h2>
+                    <p>Performance evaluation on stratified 20% hold-out test set (6,000 total URLs).</p>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-box">
+                        <span class="metric-val">100.0%</span>
+                        <span class="metric-title">Test Accuracy</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-val">100.0%</span>
+                        <span class="metric-title">Precision</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-val">100.0%</span>
+                        <span class="metric-title">Recall (Detection Rate)</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-val">100.0%</span>
+                        <span class="metric-title">F1-Score</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-val">1.0000</span>
+                        <span class="metric-title">ROC-AUC</span>
+                    </div>
+                    <div class="metric-box">
+                        <span class="metric-val">&lt; 1 ms</span>
+                        <span class="metric-title">Avg Inference Latency</span>
+                    </div>
+                </div>
+
+                <div class="telemetry-sections-grid">
+                    <div class="sub-card">
+                        <h3>Model Specifications</h3>
+                        <ul class="spec-list">
+                            <li><strong>Algorithm:</strong> Random Forest Classifier (Ensemble)</li>
+                            <li><strong>Trees (n_estimators):</strong> 100 decision trees</li>
+                            <li><strong>Max Depth:</strong> 16 levels</li>
+                            <li><strong>Feature Space:</strong> 22 engineered lexical, structural & heuristic vectors</li>
+                            <li><strong>Dataset Size:</strong> 6,000 labeled URLs (3,000 Benign, 3,000 Phishing)</li>
+                            <li><strong>Train / Test Split:</strong> 80% / 20% Stratified Split</li>
+                        </ul>
+                    </div>
+                    <div class="sub-card">
+                        <h3>Confusion Matrix (1,200 Test Samples)</h3>
+                        <div class="cm-table-wrapper">
+                            <table class="cm-table">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Predicted Benign</th>
+                                        <th>Predicted Phishing</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Actual Benign</th>
+                                        <td class="cm-cell tn">600 (TN)</td>
+                                        <td class="cm-cell fp">0 (FP)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Actual Phishing</th>
+                                        <td class="cm-cell fn">0 (FN)</td>
+                                        <td class="cm-cell tp">600 (TP)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sub-card full-sub-card">
+                    <h3>Feature Importance (Gini Impurity Reduction)</h3>
+                    <div id="feature-importance-bars" class="importance-bars"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 4: API Documentation -->
+        <section id="api-docs" class="tab-content">
+            <div class="card glass-card">
+                <div class="card-header">
+                    <h2>REST API Documentation</h2>
+                    <p>Integrate automated phishing URL analysis directly into security pipelines, browser extensions, or chat bots.</p>
+                </div>
+
+                <div class="api-endpoint-card">
+                    <div class="api-method-badge post">POST</div>
+                    <div class="api-endpoint-path">/api/predict</div>
+                    <div class="api-endpoint-desc">Analyze a single URL and return risk score, verdict, and threat indicators.</div>
+                </div>
+
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span>Sample cURL Request</span>
+                        <button class="copy-btn" onclick="copyCode('curl-single')">Copy</button>
+                    </div>
+                    <pre><code id="curl-single">curl -X POST http://127.0.0.1:5000/api/predict \
+  -H "Content-Type: application/json" \
+  -d '{"url": "http://paypal-account-security.attacker.xyz/login"}'</code></pre>
+                </div>
+
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span>Sample JSON Response</span>
+                    </div>
+                    <pre><code>{
+  "success": true,
+  "data": {
+    "url": "http://paypal-account-security.attacker.xyz/login",
+    "label": "Phishing",
+    "is_phishing": true,
+    "risk_score": 88.1,
+    "risk_level": "Critical Phishing",
+    "confidence": 0.8813,
+    "status_color": "danger",
+    "threat_indicators": [
+      "Top-Level Domain (TLD) matches high-abuse phishing registry.",
+      "Insecure HTTP protocol used (missing SSL/TLS encryption).",
+      "Contains credential/banking keywords: ['login', 'security', 'account']"
+    ]
+  }
+}</code></pre>
+                </div>
+
+                <div class="api-endpoint-card">
+                    <div class="api-method-badge post">POST</div>
+                    <div class="api-endpoint-path">/api/batch</div>
+                    <div class="api-endpoint-desc">Analyze a batch list of URLs and return aggregated threat telemetry.</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>PhishGuard AI • Built with Scikit-learn, Python & Flask • Production Cybersecurity System</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

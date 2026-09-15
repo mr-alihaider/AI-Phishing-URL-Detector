@@ -1,0 +1,130 @@
+{
+  "model_type": "RandomForestClassifier",
+  "dataset_size": 6000,
+  "test_size": 1200,
+  "accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1_score": 1.0,
+  "roc_auc": 1.0,
+  "confusion_matrix": {
+    "true_negatives": 600,
+    "false_positives": 0,
+    "false_negatives": 0,
+    "true_positives": 600
+  },
+  "feature_importances": [
+    {
+      "feature": "is_https",
+      "importance": 0.3366
+    },
+    {
+      "feature": "suspicious_keyword_count",
+      "importance": 0.163
+    },
+    {
+      "feature": "count_hyphens",
+      "importance": 0.1228
+    },
+    {
+      "feature": "hostname_length",
+      "importance": 0.0628
+    },
+    {
+      "feature": "path_length",
+      "importance": 0.0582
+    },
+    {
+      "feature": "suspicious_tld",
+      "importance": 0.0479
+    },
+    {
+      "feature": "is_shortened",
+      "importance": 0.0469
+    },
+    {
+      "feature": "consecutive_chars_max",
+      "importance": 0.033
+    },
+    {
+      "feature": "digit_ratio",
+      "importance": 0.0267
+    },
+    {
+      "feature": "url_length",
+      "importance": 0.0251
+    },
+    {
+      "feature": "count_dots",
+      "importance": 0.0164
+    },
+    {
+      "feature": "letter_ratio",
+      "importance": 0.0125
+    },
+    {
+      "feature": "count_equal",
+      "importance": 0.0101
+    },
+    {
+      "feature": "shannon_entropy",
+      "importance": 0.0092
+    },
+    {
+      "feature": "count_slash",
+      "importance": 0.0079
+    },
+    {
+      "feature": "has_ip_address",
+      "importance": 0.0078
+    },
+    {
+      "feature": "count_question",
+      "importance": 0.0066
+    },
+    {
+      "feature": "count_subdomains",
+      "importance": 0.0045
+    },
+    {
+      "feature": "has_punycode",
+      "importance": 0.0019
+    },
+    {
+      "feature": "has_https_in_hostname",
+      "importance": 0.0
+    },
+    {
+      "feature": "count_percent",
+      "importance": 0.0
+    },
+    {
+      "feature": "count_at",
+      "importance": 0.0
+    }
+  ],
+  "feature_names": [
+    "url_length",
+    "hostname_length",
+    "path_length",
+    "count_dots",
+    "count_hyphens",
+    "count_at",
+    "count_question",
+    "count_equal",
+    "count_slash",
+    "count_percent",
+    "count_subdomains",
+    "has_ip_address",
+    "is_https",
+    "has_https_in_hostname",
+    "is_shortened",
+    "digit_ratio",
+    "letter_ratio",
+    "shannon_entropy",
+    "suspicious_keyword_count",
+    "suspicious_tld",
+    "has_punycode",
+    "consecutive_chars_max"
+  ]
+}

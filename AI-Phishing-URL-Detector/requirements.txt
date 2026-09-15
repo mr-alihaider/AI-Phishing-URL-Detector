@@ -1,0 +1,12 @@
+# Core Machine Learning & Data Science
+numpy>=1.26.0
+scikit-learn>=1.4.0
+scipy>=1.10.0
+joblib>=1.3.0
+
+# Web Framework & API
+Flask>=3.0.0
+Werkzeug>=3.0.0
+
+# Utilities
+requests>=2.31.0
